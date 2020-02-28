@@ -12,6 +12,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BleManager mBleManager;
     private TextView mTip;
+    private Button mStop;
     private RelativeLayout mBluetootTipLayout;
     private int mCount = 0;
     private static final String TAG = "EsimTestActivity";
@@ -69,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mTip = findViewById(R.id.test_tip);
+        mStop=(Button)findViewById(R.id.stop_test);
+        mStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBleManager.setmIsSend(false);
+            }
+        });
         mBluetootTipLayout = findViewById(R.id.open_bluetooth);
         mBleManager = BleManager.getInstance();
         mBleManager.setHandler(mHandler);

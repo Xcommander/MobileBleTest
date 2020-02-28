@@ -16,6 +16,7 @@ import android.bluetooth.le.BluetoothLeAdvertiser;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
@@ -199,6 +200,7 @@ public class BleManager {
             currentDevice = device;
             if (newState == 0) {
                 mHandler.sendEmptyMessage(5);
+                mIsSend = false;
             }
 
         }
@@ -305,6 +307,34 @@ public class BleManager {
         mGattCharacteristic = characteristic;
         //processResponse(reqeustBytes);
         Log.e("xulinchao", "message = " + byte2HexStr(reqeustBytes));
+        if ("(0x) 01".equals(byte2HexStr(reqeustBytes))) {
+            //APP 在20s后，停止发送数据
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mIsSend = false;
+                }
+            }, 20 * 1000)
+            ;
+            mGattCharacteristic.setValue("1234567890kggfffssd".getBytes());
+            mIsSend = true;
+            sendData();
+        } else if ("(0x) 02".equals(byte2HexStr(reqeustBytes))) {
+            mIsSend = false;
+        }
+    }
+
+    public void setmIsSend(boolean mIsSend) {
+        this.mIsSend = mIsSend;
+    }
+
+    private boolean mIsSend = false;
+
+    private void sendData() {
+        while (mIsSend) {
+            bluetoothGattServer.notifyCharacteristicChanged(currentDevice, mGattCharacteristic, false);
+            SystemClock.sleep(10);
+        }
     }
 
 

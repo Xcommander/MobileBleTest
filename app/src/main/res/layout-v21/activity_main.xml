@@ -9,6 +9,15 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="BLE测试" />
+
+    <Button
+        android:id="@+id/stop_test"
+        android:layout_alignTop="@id/test_tip"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="停止传输" />
     <RelativeLayout
         android:id="@+id/open_bluetooth"
         android:layout_width="match_parent"
